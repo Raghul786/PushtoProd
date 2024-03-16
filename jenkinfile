@@ -1,0 +1,63 @@
+pipeline {
+    agent none // Run on any available agent
+
+    triggers {
+        scm { // Trigger on SCM (Git) changes
+            branch 'develop' // Only trigger on pushes to the develop branch
+        }
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd' // Fetch code from develop branch
+            }
+        }
+
+        stage('Test') {
+            agent { node { label 'test-node' } } // Run on agent named test-node
+            when {
+                expression { // Run only if previous stage succeeds
+                    return success
+                }
+            }
+            steps {
+                script {
+                    // Assuming your project files are in a subdirectory called "project" within the workspace
+                    def sourceDir = "${env.WORKSPACE}/project"
+
+                    // Use chosen method to copy files to test server (e.g., scp, rsync)
+                    sh "scp -r ${sourceDir} ubuntu@<test_server_ip>:/home/ubuntu"
+                        .replace("<test_server_ip>", "your_test_server_ip") // Replace with test server IP
+
+                    // Add your test commands here (e.g., unit tests, integration tests)
+                    sh 'sh /path/to/your/test.sh' // Replace with your actual test script path
+                }
+            }
+            post { // Actions to perform after the stage
+                success { // If test stage succeeds
+                    build job: 'prod' // Trigger the prod job
+                }
+            }
+        }
+
+        stage('Prod') {
+            agent { node { label 'prod-node' } } // Run on agent named prod-node
+            when {
+                expression { // Run only if previous stage succeeds (test job)
+                    return success
+                }
+            }
+            steps {
+                script {
+                    // Assuming your project files are in a subdirectory called "project" within the workspace
+                    def sourceDir = "${env.WORKSPACE}/project"
+
+                    // Use chosen method to copy files to production server (e.g., scp, rsync)
+                    sh "scp -r ${sourceDir} ubuntu@<prod_server_ip>:/home/ubuntu"
+                        .replace("<prod_server_ip>", "your_production_server_ip") // Replace with production server IP
+                }
+            }
+        }
+    }
+}
