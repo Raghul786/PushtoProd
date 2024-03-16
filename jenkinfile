@@ -1,12 +1,6 @@
 pipeline {
     agent none // Run on any available agent
 
-    triggers {
-        scm { // Trigger on SCM (Git) changes
-            branch 'develop' // Only trigger on pushes to the develop branch
-        }
-    }
-
     stages {
         stage('Checkout Code') {
             steps {
@@ -44,7 +38,7 @@ pipeline {
         stage('Prod') {
             agent { node { label 'prod-node' } } // Run on agent named prod-node
             when {
-                expression { // Run only if previous stage (test job) succeeds
+                expression { // Run only if previous stage succeeds (test job)
                     return success
                 }
             }
