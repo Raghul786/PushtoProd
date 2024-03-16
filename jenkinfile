@@ -21,8 +21,8 @@ pipeline {
                     def sourceDir = "${env.WORKSPACE}/project"
 
                     // Use chosen method to copy files to test server (e.g., scp, rsync)
-                    sh "scp -r ${sourceDir} ubuntu@<test_server_ip>:/home/ubuntu"
-                        .replace("<test_server_ip>", "your_test_server_ip") // Replace with test server IP
+                    sh "scp -r ${sourceDir} ubuntu@3.92.162.162:/home/ubuntu"
+                        .replace("3.92.162.162", "54.162.5.248") // Replace with test server IP
 
                     // Add your test commands here (e.g., unit tests, integration tests)
                     sh 'sh /path/to/your/test.sh' // Replace with your actual test script path
