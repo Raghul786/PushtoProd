@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Function to calculate the sum of two numbers
+function add_numbers() {
+    local num1=$1
+    local num2=$2
+    local sum=$((num1 + num2))
+    echo "$sum"
+}
+
+# Example usage
+result=$(add_numbers 5 7)
+echo "The sum is: $result"
