@@ -44,7 +44,7 @@ pipeline {
         stage('Prod') {
             agent { node { label 'prod-node' } } // Run on agent named prod-node
             when {
-                expression { // Run only if previous stage succeeds (test job)
+                expression { // Run only if previous stage (test job) succeeds
                     return success
                 }
             }
