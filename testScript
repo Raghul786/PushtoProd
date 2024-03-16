@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Indicate the directory containing the project script
+project_dir="."  # Assuming the test script is in the same directory as main.sh
+
+# Load functions from the project script
+source "$project_dir/main.sh"
+
+echo "Running sample tests..."
+
+# Simulate some tests
+exit_code=0
+for (( i=1; i<=5; i++ )); do
+    # Generate random numbers for testing
+    num1=$((RANDOM % 100))
+    num2=$((RANDOM % 100))
+    expected_sum=$((num1 + num2))
+
+    # Call the function and check the result
+    result=$(add_numbers $num1 $num2)
+    if [[ $result -eq $expected_sum ]]; then
+        echo "Test $i passed."
+    else
+        echo "Test $i failed! Expected $expected_sum, got $result."
+        exit_code=1
+    fi
+done
+
+exit $exit_code
+
