@@ -1,10 +1,9 @@
-pipeline {
+pipeline 
+{
 
-    agent {
-        node {
-            label 'Built-In Node'  // Replace with your preferred agent label
-        }
-    }
+    agent any // Run on any available agent
+        
+    
 
     stages {
         stage('Checkout Code') {
