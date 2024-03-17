@@ -15,7 +15,7 @@ pipeline {
                 }
             }
             steps {
-                git branch: 'develop', credentialsId: 'your-git-credentials-id', url: 'https://github.com/Raghul786/PushtoProd', gitTool: 'installed-git' // Replace with your configured Git tool name
+                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd', gitTool: 'installed-git' // Replace with your configured Git tool name
 
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
