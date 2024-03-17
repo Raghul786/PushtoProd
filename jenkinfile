@@ -8,51 +8,43 @@ pipeline {
             }
         }
 
-   stage('Test') {
-    node {
-        label 'test-node' // Replace with your test node label
-    }
-    steps {
-        git branch: 'develop', credentialsId: 'your-git-credentials-id', url: 'https://github.com/Raghul786/PushtoProd', gitTool: 'installed-git' // Replace with your configured Git tool name
-        // Other test steps...
-    }
-}
-
+        stage('Test') {
+            agent {
+                node {
+                    label 'test-node' // Replace with your test node label
+                }
+            }
             steps {
+                git branch: 'develop', credentialsId: 'your-git-credentials-id', url: 'https://github.com/Raghul786/PushtoProd', gitTool: 'installed-git' // Replace with your configured Git tool name
+
                 script {
-                    // Assuming your project files are in a subdirectory called "project" within the workspace
                     def sourceDir = "${env.WORKSPACE}/project"
-
-                    // Use chosen method to copy files to test server (e.g., scp, rsync)
-                    sh "scp -r ${sourceDir} ubuntu@3.92.162.162:/home/ubuntu"
-                        .replace("3.92.162.162", "54.162.5.248") // Replace with test server IP
-
-                    // Add your test commands here (e.g., unit tests, integration tests)
+                    sh "scp -r ${sourceDir} ubuntu@54.162.5.248:/home/ubuntu" // Replace with test server IP
                     sh 'sh /path/to/your/test.sh' // Replace with your actual test script path
                 }
             }
-            post { // Actions to perform after the stage
-                success { // If test stage succeeds
+            post {
+                success {
                     build job: 'prod' // Trigger the prod job
                 }
             }
         }
 
         stage('Prod') {
-            agent { node { label 'prod-node' } } // Run on agent named prod-node
+            agent {
+                node {
+                    label 'prod-node' // Run on agent named prod-node
+                }
+            }
             when {
                 expression { // Run only if previous stage succeeds (test job)
-                    return success
+                    return currentBuild.result == 'SUCCESS'
                 }
             }
             steps {
                 script {
-                    // Assuming your project files are in a subdirectory called "project" within the workspace
                     def sourceDir = "${env.WORKSPACE}/project"
-
-                    // Use chosen method to copy files to production server (e.g., scp, rsync)
-                    sh "scp -r ${sourceDir} ubuntu@<prod_server_ip>:/home/ubuntu"
-                        .replace("<prod_server_ip>", "your_production_server_ip") // Replace with production server IP
+                    sh "scp -r ${sourceDir} ubuntu@your_production_server_ip:/home/ubuntu" // Replace with production server IP
                 }
             }
         }
