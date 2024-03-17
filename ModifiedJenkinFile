@@ -24,8 +24,8 @@ pipeline
 
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
-sh "ssh -i /home/ubuntu/irfanbro.pem -p 22 ubuntu@172.31.22.206 scp -r /home/ubuntu/sourceDir /home/ubuntu"
-sh "ssh -i /home/ubuntu/irfanbro.pem -p 22 ubuntu@172.31.22.206 /home/ubuntu/testscript.sh"
+sh "ssh -i /home/ubuntu/irfanbro.pem -p 22 ubuntu@172.31.17.252 scp -r /home/ubuntu/sourceDir /home/ubuntu"
+sh "ssh -i /home/ubuntu/irfanbro.pem -p 22 ubuntu@172.31.17.252 /home/ubuntu/testscript.sh"
 
 
                 }
