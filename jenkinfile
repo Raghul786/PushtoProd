@@ -8,13 +8,16 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            agent { node { label 'test-node' } } // Run on agent named test-node
-            when {
-                expression { // Run only if previous stage succeeds
-                    return success
-                }
-            }
+   stage('Test') {
+    node {
+        label 'test-node' // Replace with your test node label
+    }
+    steps {
+        git branch: 'develop', credentialsId: 'your-git-credentials-id', url: 'https://github.com/Raghul786/PushtoProd', gitTool: 'installed-git' // Replace with your configured Git tool name
+        // Other test steps...
+    }
+}
+
             steps {
                 script {
                     // Assuming your project files are in a subdirectory called "project" within the workspace
