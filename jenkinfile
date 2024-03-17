@@ -19,8 +19,8 @@ pipeline {
 
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
-                    sh "scp -r ${sourceDir} ubuntu@54.162.5.248:/home/ubuntu" // Replace with test server IP
-                    sh 'sh /path/to/your/test.sh' // Replace with your actual test script path
+                    sh "scp -r ${sourceDir} ubuntu@54.90.237.125:/home/ubuntu" // Replace with test server IP
+                    sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
                 }
             }
             post {
@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
-                    sh "scp -r ${sourceDir} ubuntu@your_production_server_ip:/home/ubuntu" // Replace with production server IP
+                    sh "scp -r ${sourceDir} ubuntu@54.175.73.239:/home/ubuntu" // Replace with production server IP
                 }
             }
         }
