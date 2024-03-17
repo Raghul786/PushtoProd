@@ -20,7 +20,7 @@ pipeline {
 
     script {
       def sourceDir = "${env.WORKSPACE}/project"
-sh "ssh ubuntu@54.175.73.239 -p 22  -o StrictHostKeyChecking=no put -r ${env.WORKSPACE}/project /home/ubuntu"
+sh "ssh -i "~/Destop.pem" ubuntu@54.175.73.239 -p 22  -o StrictHostKeyChecking=no put -r ${env.WORKSPACE}/project /home/ubuntu"
       catchError {
         ' ./home/ubuntu/testscript.sh' // Replace with your actual test script path
       }
