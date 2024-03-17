@@ -10,27 +10,35 @@ pipeline {
         }
 
         stage('Test') {
-            agent {
-                node {
-                    label 'test-node' // Replace with your test node label
-                }
-            }
-            steps {
-                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
-                script {
-                    def sourceDir = "${env.WORKSPACE}/project"
-                    // Use SCP plugin for secure credential handling (assuming plugin is installed)
-                    catchError {
-                        sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
-                    }
-                }
-            }
-            post {
-                success {
-                    build job: 'prod' // Trigger the prod job
-                }
-            }
-        }
+  agent {
+    node {
+      label 'test-node' // Replace with your test node label
+    }
+  }
+  steps {
+    git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
+
+    script {
+      def sourceDir = "${env.WORKSPACE}/project"
+
+      // Use SCP plugin for secure credential handling (assuming plugin is installed)
+      scp username: 'ubuntu', 
+        credentialsId: '$JENKINS_CREDENTIAL_ID(Cruella)', 
+        source: sourceDir, 
+        target: '/home/ubuntu'
+
+      catchError {
+        sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
+      }
+    }
+  }
+  post {
+    success {
+      build job: 'prod' // Trigger the prod job
+    }
+  }
+}
+
 
         stage('Prod') {
             agent {
