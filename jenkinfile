@@ -19,7 +19,7 @@ pipeline {
 
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
-                    sh "scp -r ${sourceDir} ubuntu@54.90.237.125:/home/ubuntu" // Replace with test server IP
+                    sh "scp -r ${sourceDir} ubuntu@67.202.32.195:/home/ubuntu" // Replace with test server IP
                     sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
                 }
             }
