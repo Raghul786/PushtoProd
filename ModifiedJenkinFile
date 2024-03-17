@@ -24,9 +24,10 @@ pipeline
 
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
+sh "ssh -i /home/ubuntu/Desktop.pem -p 22 ubuntu@54.90.237.125 put -r ${sourceDir} /home/ubuntu"
+sh "ssh -i /home/ubuntu/Desktop.pem -p 22 ubuntu@54.90.237.125 /home/ubuntu/testscript.sh"
 
-                    sh "sshpass -p 'Bayer@5678' ssh -p 22 ubuntu@54.90.237.125 "put -r ${sourceDir} /home/ubuntu"
-                    sh "sshpass -p 'Bayer@5678'ssh -p 22 ubuntu@54.90.237.125 /home/ubuntu/testscript.sh"
+
                 }
             }
             post {
