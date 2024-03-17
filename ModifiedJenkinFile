@@ -2,7 +2,7 @@ pipeline {
 
     agent {
         node {
-            label 'any'  // Replace with your preferred agent label
+            label 'Built-In Node'  // Replace with your preferred agent label
         }
     }
 
