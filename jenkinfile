@@ -1,5 +1,5 @@
 pipeline {
-    agent none // Run on any available agent
+    agent any // Run on any available agent
 
     stages {
         stage('Checkout Code') {
