@@ -1,55 +1,58 @@
 pipeline {
 
+    agent {
+        node {
+            label 'any'  // Replace with your preferred agent label
+        }
+    }
+
     stages {
         stage('Checkout Code') {
-            agent any // Run on any available agent
             steps {
-                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd' // Fetch code from develop branch
+                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
             }
         }
 
         stage('Test') {
-  agent {
-    node {
-      label 'test-node' // Replace with your test node label
-    }
-  }
-  steps {
-    git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
+            agent {
+                node {
+                    label 'test-node'
+                }
+            }
+            steps {
+                // Redundant code: Git checkout already done in the previous stage
+                // git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
 
-    script {
-      def sourceDir = "${env.WORKSPACE}/project"
+                script {
+                    def sourceDir = "${env.WORKSPACE}/project"
 
-    sh "ssh ubuntu@54.90.237.125 -p 22  -o StrictHostKeyChecking=no put -r ${env.WORKSPACE}/project /home/ubuntu"
+                    sh "ssh -p 22 -o UserKnownHostsFile=/dev/null ubuntu@54.90.237.125 put -r ${sourceDir} /home/ubuntu"
 
-      catchError {
-        ' ./home/ubuntu/testscript.sh' // Replace with your actual test script path
-      }
-    }
-  }
-  post {
-    success {
-      build job: 'prod' // Trigger the prod job
-    }
-  }
-}
-
+                    sh "ssh ubuntu@54.90.237.125 /home/ubuntu/testscript.sh"
+                }
+            }
+            post {
+                success {
+                    build job: 'prod'
+                }
+            }
+        }
 
         stage('Prod') {
             agent {
                 node {
-                    label 'prod-node' // Run on agent named prod-node
+                    label 'prod-node'
                 }
             }
             when {
-                expression { // Run only if previous stage succeeds (test job)
+                expression {
                     return currentBuild.result == 'SUCCESS'
                 }
             }
             steps {
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
-                    sh "scp -r ${sourceDir} ubuntu@54.175.73.239:/home/ubuntu" // Replace with production server IP
+                    sh "ssh -i ~/.ssh/path_to_your_key -p 22 -o UserKnownHostsFile=/dev/null ubuntu@54.175.73.239 put -r ${sourceDir} /home/ubuntu"
                 }
             }
         }
