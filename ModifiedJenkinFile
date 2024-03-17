@@ -1,0 +1,54 @@
+pipeline {
+    agent any // Run on any available agent
+
+    stages {
+        stage('Checkout Code') {
+            agent any // Run on any available agent
+            steps {
+                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd' // Fetch code from develop branch
+            }
+        }
+
+        stage('Test') {
+            agent {
+                node {
+                    label 'test-node' // Replace with your test node label
+                }
+            }
+            steps {
+                git branch: 'develop', url: 'https://github.com/Raghul786/PushtoProd'
+                script {
+                    def sourceDir = "${env.WORKSPACE}/project"
+                    // Use SCP plugin for secure credential handling (assuming plugin is installed)
+                    catchError {
+                        sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
+                    }
+                }
+            }
+            post {
+                success {
+                    build job: 'prod' // Trigger the prod job
+                }
+            }
+        }
+
+        stage('Prod') {
+            agent {
+                node {
+                    label 'prod-node' // Run on agent named prod-node
+                }
+            }
+            when {
+                expression { // Run only if previous stage succeeds (test job)
+                    return currentBuild.result == 'SUCCESS'
+                }
+            }
+            steps {
+                script {
+                    def sourceDir = "${env.WORKSPACE}/project"
+                    sh "scp -r ${sourceDir} ubuntu@54.175.73.239:/home/ubuntu" // Replace with production server IP
+                }
+            }
+        }
+    }
+}
