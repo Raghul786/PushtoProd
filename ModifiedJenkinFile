@@ -15,7 +15,7 @@ pipeline
         stage('Test') {
             agent {
                 node {
-                    label 'test-node'
+                    label 'Agent1'
                 }
             }
             steps {
@@ -40,7 +40,7 @@ sh "ssh -i /home/ubuntu/Desktop.pem -p 22 ubuntu@67.202.32.195 /home/ubuntu/test
         stage('Prod') {
             agent {
                 node {
-                    label 'prod-node'
+                    label 'Agent2'
                 }
             }
             when {
