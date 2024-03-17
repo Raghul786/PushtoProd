@@ -28,7 +28,7 @@ pipeline {
         target: '/home/ubuntu'
 
       catchError {
-        sh 'sh /home/ubuntu/testscript.sh' // Replace with your actual test script path
+        sh 'bash /home/ubuntu/testscript.sh' // Replace with your actual test script path
       }
     }
   }
