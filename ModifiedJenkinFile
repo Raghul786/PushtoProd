@@ -25,7 +25,7 @@ pipeline
                 script {
                     def sourceDir = "${env.WORKSPACE}/project"
 
-                    sh "ssh -p 22 -o UserKnownHostsFile=/dev/null ubuntu@54.90.237.125 put -r ${sourceDir} /home/ubuntu"
+                    sh "ssh -p 22 ubuntu@54.90.237.125 put -r ${sourceDir} /home/ubuntu"
 
                     sh "ssh ubuntu@54.90.237.125 /home/ubuntu/testscript.sh"
                 }
